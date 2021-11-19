@@ -1,11 +1,15 @@
   var Trex, TrexCorrendo;
   var chao, chaoimagem;
   var chaoinv;
+  var nuvem;
+  var nuvemimg;
 
 
   function preload(){
     TrexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
     chaoimagem = loadImage ("ground2.png");
+
+    nuvemimg = loadImage("cloud.png");
 }
 
 
@@ -25,6 +29,9 @@ borda = createEdgeSprites();
 
     chaoinv = createSprite(100,190,400,10);
     chaoinv.visible = false;
+
+    //var numero = Math.round(random(1,100));
+    //console.log(numero);
 }
 
 
@@ -32,7 +39,7 @@ borda = createEdgeSprites();
 
  background("white");
 
- console.log (Trex.y);
+ //console.log (Trex.y);
 
   chao.velocityX = -2;
 
@@ -47,5 +54,19 @@ borda = createEdgeSprites();
   Trex.velocityY = Trex.velocityY + 1;
   Trex.collide(chaoinv);
 
+nuvens();
+
 drawSprites();
+}
+
+function nuvens(){
+  if (frameCount%60 === 0){
+    nuvem = createSprite(600,100,40,10);
+    nuvem.addImage (nuvemimg);
+    nuvem.scale = 0.7;
+    nuvem.y = Math.round(random(10,100));
+    nuvem.velocityX = -3;
+    nuvem.depth = Trex.depth;
+    Trex.depth = Trex.depth + 1;
+  }
 }
