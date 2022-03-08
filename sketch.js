@@ -10,6 +10,11 @@
   var obs5;
   var obs6;
   var pontos;
+  var grupoNuvens;
+  var grupoObs;
+  var JOGANDO = 1;
+  var GAMEOVER = 0;
+  var estado = JOGANDO;
 
 
   function preload(){
@@ -47,33 +52,56 @@ borda = createEdgeSprites();
     //var numero = Math.round(random(1,100));
     //console.log(numero);
     pontos = 0;
+
+    grupoNuvens = new Group();
+    grupoObs = new Group();
 }
 
 
   function draw(){
+    background("white");
 
- background("white");
+    //console.log (Trex.y);
 
- //console.log (Trex.y);
 
-  chao.velocityX = -2;
+    if(estado === JOGANDO){
+      chao.velocityX = -2;
+      
+      if(keyDown("space") && Trex.y >= 150){
+        Trex.velocityY = -10;
+    }
+  nuvens();
+  obstaculos();
 
-  if(keyDown("space") && Trex.y >= 150){
-    Trex.velocityY = -10;
-}
-
-  if (chao.x < 0){
-    chao.x = chao.width/2;
-}
+  pontos = pontos+Math.round(frameCount/60);
 
   Trex.velocityY = Trex.velocityY + 1;
+
+  if(grupoObs.isTouching(Trex)){
+    estado = GAMEOVER;
+  }
+    } 
+    
+    else if (estado === GAMEOVER){
+      chao.velocityX = 0;
+      grupoNuvens.setVelocityXEach(0);
+      grupoObs.setVelocityXEach(0);
+
+    }
+
+
+
+ 
+
+  
+
+  
   Trex.collide(chaoinv);
 
-nuvens();
-obstaculos();
+
 drawSprites();
 text(pontos,500,50);
-pontos = pontos+Math.round(frameCount/60);
+
 }
 
 function nuvens(){
@@ -86,6 +114,7 @@ function nuvens(){
     nuvem.depth = Trex.depth;
     Trex.depth = Trex.depth + 1;
     nuvem.lifetime = 250;
+    grupoNuvens.add(nuvem);
   }
 }
 
@@ -115,6 +144,7 @@ function obstaculos (){
    obstaculo.scale = 0.5;
 
    obstaculo.lifetime = 300;
+   grupoObs.add(obstaculo);
 
   }
 
