@@ -19,6 +19,9 @@
   var gameoverImg;
   var reset;
   var resetBotao;
+  var morte;
+  var pontuacao;
+  var pulo;
 
 
   function preload(){
@@ -37,6 +40,10 @@
 
    gameoverImg = loadImage("gameOver.png");
    resetBotao = loadImage("restart.png");
+
+   morte = loadSound("die.mp3");
+   pontuacao = loadSound("checkPoint.mp3");
+   pulo = loadSound("jump.mp3");
 }
 
 
@@ -86,10 +93,11 @@ borda = createEdgeSprites();
 
 
         if(estado === JOGANDO){
-      chao.velocityX = -2;
+      chao.velocityX = -(4+pontos/100);
       
       if(keyDown("space") && Trex.y >= 150){
-        Trex.velocityY = -10;
+        Trex.velocityY = -15;
+        pulo.play();
     }
   nuvens();
   obstaculos();
@@ -101,8 +109,13 @@ borda = createEdgeSprites();
   gameover.visible = false;
   reset.visible = false;
 
+  if (pontos%1000 === 0 && pontos > 0){
+    pontuacao.play();
+  }
+
   if(grupoObs.isTouching(Trex)){
     estado = GAMEOVER;
+    morte.play();
   }
     } 
     
@@ -156,7 +169,7 @@ function nuvens(){
 function obstaculos (){
   if (frameCount%60 === 0){
    var obstaculo = createSprite (600,165,10,40);
-   obstaculo.velocityX = -6;
+   obstaculo.velocityX = -(6+pontos/500);
    var numero = Math.round(random(1,6));
    switch (numero) {
       case 1: obstaculo.addImage(obs1);
