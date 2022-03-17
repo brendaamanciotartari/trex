@@ -93,7 +93,11 @@ borda = createEdgeSprites();
 
 
         if(estado === JOGANDO){
-      chao.velocityX = -(4+pontos/100);
+      chao.velocityX = -(4+pontos/500);
+
+      if(chao.x < 0){
+        chao.x = chao.width/2;
+      }
       
       if(keyDown("space") && Trex.y >= 150){
         Trex.velocityY = -15;
@@ -102,14 +106,14 @@ borda = createEdgeSprites();
   nuvens();
   obstaculos();
 
-  pontos = pontos+Math.round(frameCount/60);
+  pontos = pontos+Math.round(frameRate()/60);
 
   Trex.velocityY = Trex.velocityY + 1;
 
   gameover.visible = false;
   reset.visible = false;
 
-  if (pontos%1000 === 0 && pontos > 0){
+  if (pontos % 500 === 0 && pontos > 0){
     pontuacao.play();
   }
 
@@ -135,13 +139,17 @@ borda = createEdgeSprites();
       gameover.visible = true;
       reset.visible = true;
 
+      if(mousePressedOver(reset)){
+        reiniciar();
+      }
+
     }
 
 
 
  
 
-  
+ 
 
   
   Trex.collide(chaoinv);
@@ -150,6 +158,14 @@ borda = createEdgeSprites();
 drawSprites();
 text(pontos,500,50);
 
+}
+
+function reiniciar(){
+  estado = JOGANDO;
+  grupoNuvens.destroyEach();
+  grupoObs.destroyEach();
+  Trex.changeAnimation("correndo");
+  pontos = 0;
 }
 
 function nuvens(){
